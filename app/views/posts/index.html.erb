@@ -1,0 +1,78 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">GeekInstagtam</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <a class="nav-link" href="#"><%= link_to "新規投稿", new_post_path %><span class="sr-only">(current)</span>
+          </a>
+          <a class="nav-link" href="#">
+              <% if user_signed_in? %>
+                <%= link_to "マイページへ", user_path(current_user.id) %>
+              <% end %>
+          </a>
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><%= link_to 'ログアウト', destroy_user_session_path, method: :delete %>
+          </a>
+        </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <%= form_tag({controller:"posts",action:"index"}, method: :get, class:"form-control mr-sm-2") do %>
+          <%= text_field_tag :search %>
+          <%= submit_tag '検索する', class:"btn btn-outline-success my-2 my-sm-0" %>
+        <% end %>
+      </form>
+    </div>
+  </nav>
+</header>
+
+  <div class="container">
+    <div class="row">
+      <% @posts.each do |t| %>
+          <div class="col-sm-4">
+            <a href="/users/<%= t.user.id %>"><%= t.user.name %></a>
+            <div class="card" style="width: 18rem;">
+                <%= image_tag t.image_url, size: "250x200" if t.image? %>
+                <div class="card-body">
+                  <p class="card-text"><%= t.body %></p>
+                  <% if user_signed_in? %>
+                    <% if current_user.already_liked?(t) %>
+                        <%= link_to post_like_path(id: t.id, post_id: t.id), method: :delete do %>
+                          <i class="fas fa-heart"></i><%= t.likes.count %>
+                        <% end %>
+                    <% else %>
+                        <%= link_to post_likes_path(id: t.id, post_id: t.id), method: :post do %>
+                          <i class="fas fa-heart"></i><%= t.likes.count %>
+                        <% end %>
+                  <% end %>
+                        <% else %>
+                          <i class="fas fa-heart"></i><%= t.likes.count %>
+                        <% end %>
+
+                        <% if user_signed_in? %>
+                          <%= form_with(model: [t, @comment], local: true) do |f| %>
+                            <%= f.text_field :comment, size: "20" %>
+                            <%= button_tag type: "submit" do %>
+                              <i class="far fa-comments"></i> コメントする
+                            <% end %>
+                          <% end %>
+                        <% end %>
+
+                        <%= link_to "詳細へ", post_path(t.id) %>
+                          <% if user_signed_in? && current_user.id == t.user_id %>
+                            <%= link_to "編集する", edit_post_path(t.id) %>
+                            <%= button_to "削除する", post_path(t.id), method: :delete %>
+                          <% end %>
+                </div>
+            </div>
+          </div>
+      <% end %>
+    </div>
+  </div>
+
+  
+  
+  
+
+

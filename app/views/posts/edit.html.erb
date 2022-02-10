@@ -1,0 +1,8 @@
+<%= form_for @post do |f| %>
+  <%= f.label :画像を選択 %>
+  <%= f.file_field :image, class:"btn btn-outline-light" %>
+  <p><%= f.label :タイトル %></p>
+  <%= f.text_field :body, class:"form-control col-md-4" %> 
+  <p><%= f.submit "編集する", class:"btn btn-outline-info" %></p>
+<% end %>
+
