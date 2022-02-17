@@ -1,6 +1,9 @@
 <h1>GeekInstagram</h1>
 <h3>投稿詳細<h3>
 <div class="post">
+  <h4>ユーザー情報</h4>
+  <p><%= @post.body %></p>
+
   <p><%=image_tag @post.image_url %></p>
   <p><%= @post.body %></p>
   <p><%= @post.created_at %></p>
@@ -42,6 +45,7 @@
       <% end %>
     <% end %>
   <% end %>
+  
 </div>
 
 <% if user_signed_in? && current_user.id == @post.user_id %>
